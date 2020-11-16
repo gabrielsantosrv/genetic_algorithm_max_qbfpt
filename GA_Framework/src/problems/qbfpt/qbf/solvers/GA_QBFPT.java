@@ -69,6 +69,7 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 		return solution;
 	}
 
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -94,9 +95,15 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 	@Override
 	protected Double fitness(Chromosome chromosome) {
 
-		return decode(chromosome).cost;
+		Solution<Integer> sol = decode(chromosome);
+		//if is a infeasible solution, then returns 0
+		if(!((QBFPT)ObjFunction).isFeasible(sol))
+		    return 0.0;
+
+        return sol.cost;
 
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -119,7 +126,7 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 	public static void main(String[] args) throws IOException {
 
 		long startTime = System.currentTimeMillis();
-		GA_QBFPT ga = new GA_QBFPT(1000, 100, 1.0 / 100.0, "instances/qbf100");
+		GA_QBFPT ga = new GA_QBFPT(1000, 100, 1.0 / 100.0, "instances/qbf020");
 		Solution<Integer> bestSol = ga.solve();
 		System.out.println("maxVal = " + bestSol);
 		long endTime = System.currentTimeMillis();

@@ -114,39 +114,37 @@ public class QBFPT implements Evaluator<Integer> {
 		return _triples;
 	}
 
-	/**
-	 * Test whether the solution obtained with the insertion of i will be feasible.
-	 * For this, checks triple restriction.
-	 * Checks if the 2 other elements of all triples with i are in the current solution.
-	 * @param i Value to check feasibility.
-	 * @return feasible: true if i is feasible, false otherwise.
-	 */
-	public boolean is_feasible(int i){
-		boolean feasible = true;
-		double sum;
 
-		// Check all triples.
-		for(int [] tuple : this.triples){
+    /**
+     * Test whether the solution is feasible.
+     * For this, checks triple restriction.
+     * Checks if 3 elements of any triples are in the current solution.
+     * @param sol a Solution
+     * @return feasible: true if i is feasible, otherwise false
+     */
+    public boolean isFeasible(Solution<Integer> sol) {
+        for (Integer x : sol) {
+            double sum;
+            for (int[] triple : this.triples) {
+                // check if the value x is in a triple
+                if (x == triple[0] || x == triple[1] || x == triple[2]) {
+                    sum = 0;
+                    for (int k : triple) {
+                        if(sol.contains(new Integer(k)))
+                            sum += 1;
+                    }
 
-			// If the value is in a triple, check if triple is in the current solution.
-			if(i == tuple[0] || i == tuple[1] || i == tuple[2]){
-				sum = 0;
-				for(int k : tuple){
-					sum += this.variables[k];
-				}
+                    //if all the elements of that triple in which x is included
+                    //are also in the current solution, then it is infeasible
+                    if (sum == 3.0)
+                        return false;
+                }
+            }
 
-				//if there are 2 indices in a tuple that have already been set to 1
-				//and the index i isn't of theses indices, then set it to 1 will
-				//complete a prohibited tuple.
-				if(sum == 2.0 && this.variables[i] == 0.0){
-					feasible = false;
-					break;
-				}
-			}
-		}
+        }
 
-		return feasible;
-	}
+        return true;
+    }
 
 
 	/**
