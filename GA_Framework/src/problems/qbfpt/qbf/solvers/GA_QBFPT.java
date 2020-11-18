@@ -4,7 +4,13 @@ import metaheuristics.ga.AbstractGA;
 import problems.qbfpt.qbf.QBFPT;
 import solutions.Solution;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Metaheuristic GA (Genetic Algorithm) for
@@ -121,18 +127,71 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 
 	/**
 	 * A main method used for testing the GA metaheuristic.
+	 * @throws URISyntaxException 
 	 * 
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, URISyntaxException {
+		
+		List<String> instances = new ArrayList<String>();
+		instances.add("qbf020");
+		instances.add("qbf040");
+		instances.add("qbf060");
+		instances.add("qbf080");
+		instances.add("qbf100");
+		instances.add("qbf200");
+		instances.add("qbf400");
+		
+		for(String instance: instances) {
+			try {
+				Integer pop1 = 100;
+				Integer pop2 = 1000;
+				Double mut1 = 1.0 / 100.0;
+				Double mut2 = 10.0 / 100.0;
+				
+				GA_QBFPT gaPadrao = new GA_QBFPT(100000, pop1, mut1, "instances/"+instance);
+				GA_QBFPT gaPop = new GA_QBFPT(100000, pop2, mut1, "instances/"+instance);
+				GA_QBFPT gaMut = new GA_QBFPT(100000, pop1, mut2, "instances/"+instance);
+				GA_QBFPT gaEvol1 = new GA_QBFPT(100000, pop1, mut1, "instances/"+instance);
+				GA_QBFPT gaEvol2 = new GA_QBFPT(100000, pop1, mut1, "instances/"+instance);
+				
+				
+				FileWriter fileWriter = new FileWriter("results/"+instance+".txt");
+				fileWriter.append(" ======== Execução " + instance + " ======= \n\n");
+				
+				GA_QBFPT.executeInstance("GA Padrão",gaPadrao, fileWriter, false, false, false);
+				GA_QBFPT.executeInstance("GA Pop",gaPop, fileWriter, false, false, false);
+				GA_QBFPT.executeInstance("GA Mut",gaMut, fileWriter, false, false, false);
+				GA_QBFPT.executeInstance("GA Evol1",gaEvol1, fileWriter, false, true, false);
+				GA_QBFPT.executeInstance("GA Evol2",gaEvol2, fileWriter, false, false, true);
+				
+				fileWriter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
+	}
+	
+	public static void executeInstance(String title, GA_QBFPT ga, FileWriter fileWriter, boolean isSUS, boolean isUniformCrossover, boolean isSteadyState) {
 		long startTime = System.currentTimeMillis();
-		GA_QBFPT ga = new GA_QBFPT(1000, 100, 1.0 / 100.0, "instances/qbf040");
-		Solution<Integer> bestSol = ga.solve(false, true, true);
-		System.out.println("maxVal = " + bestSol);
+		Solution<Integer> bestSol = ga.solve(isSUS, isUniformCrossover, isSteadyState);
 		long endTime = System.currentTimeMillis();
 		long totalTime = endTime - startTime;
-		System.out.println("Time = " + (double) totalTime / (double) 1000 + " seg");
-
+		double time = (double)totalTime/(double)1000;
+		
+		System.out.println("maxVal = " + bestSol);
+		System.out.println("Time = "+ time +" seg");
+		
+		if(fileWriter != null) {
+			try {
+				fileWriter.append(title+"\n");
+				fileWriter.append("Best solution: "+ bestSol + "\n");
+				fileWriter.append("Time: "+ time + "seg \n\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("Error writing in file: "+title);
+			}
+		}
 	}
 
 }

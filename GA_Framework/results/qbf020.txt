@@ -1,0 +1,22 @@
+ ======== Execução qbf020 ======= 
+
+GA Padrão
+Best solution: Solution: cost=[125.0], size=[9], elements=[2, 3, 4, 9, 11, 14, 15, 16, 19]
+Time: 154.444seg 
+
+GA Pop
+Best solution: Solution: cost=[120.0], size=[7], elements=[2, 3, 4, 11, 14, 15, 16]
+Time: 1355.916seg 
+
+GA Mut
+Best solution: Solution: cost=[125.0], size=[9], elements=[2, 3, 4, 9, 11, 14, 15, 16, 19]
+Time: 130.763seg 
+
+GA Evol1
+Best solution: Solution: cost=[125.0], size=[9], elements=[2, 3, 4, 9, 11, 14, 15, 16, 19]
+Time: 148.604seg 
+
+GA Evol2
+Best solution: Solution: cost=[120.0], size=[10], elements=[0, 1, 2, 4, 8, 9, 12, 14, 16, 18]
+Time: 230.352seg 
+
