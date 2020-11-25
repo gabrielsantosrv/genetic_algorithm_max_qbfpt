@@ -140,23 +140,24 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 		instances.add("qbf100");
 		instances.add("qbf200");
 		instances.add("qbf400");
+		int[] instanceSize  = {20, 40, 60, 80, 100, 200, 400};
 		
-		for(String instance: instances) {
+		for(int i=0; i<instances.size(); i++) {
 			try {
 				Integer pop1 = 100;
 				Integer pop2 = 1000;
-				Double mut1 = 1.0 / 100.0;
-				Double mut2 = 10.0 / 100.0;
+				Double mut1 = 1.0 / instanceSize[i];
+				Double mut2 = 1.0 / 100.0;
 				
-				GA_QBFPT gaPadrao = new GA_QBFPT(100000, pop1, mut1, "instances/"+instance);
-				GA_QBFPT gaPop = new GA_QBFPT(100000, pop2, mut1, "instances/"+instance);
-				GA_QBFPT gaMut = new GA_QBFPT(100000, pop1, mut2, "instances/"+instance);
-				GA_QBFPT gaEvol1 = new GA_QBFPT(100000, pop1, mut1, "instances/"+instance);
-				GA_QBFPT gaEvol2 = new GA_QBFPT(100000, pop1, mut1, "instances/"+instance);
+				GA_QBFPT gaPadrao = new GA_QBFPT(100000, pop1, mut1, "instances/"+instances.get(i));
+				GA_QBFPT gaPop = new GA_QBFPT(100000, pop2, mut1, "instances/"+instances.get(i));
+				GA_QBFPT gaMut = new GA_QBFPT(100000, pop1, mut2, "instances/"+instances.get(i));
+				GA_QBFPT gaEvol1 = new GA_QBFPT(100000, pop1, mut1, "instances/"+instances.get(i));
+				GA_QBFPT gaEvol2 = new GA_QBFPT(100000, pop1, mut1, "instances/"+instances.get(i));
 				
 				
-				FileWriter fileWriter = new FileWriter("results/"+instance+".txt");
-				fileWriter.append(" ======== Execução " + instance + " ======= \n\n");
+				FileWriter fileWriter = new FileWriter("results/"+instances.get(i)+".txt");
+				fileWriter.append(" ======== Execução " + instances.get(i) + " ======= \n\n");
 				
 				GA_QBFPT.executeInstance("GA Padrão",gaPadrao, fileWriter, false, false, false);
 				GA_QBFPT.executeInstance("GA Pop",gaPop, fileWriter, false, false, false);
