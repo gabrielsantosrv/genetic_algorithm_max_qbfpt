@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import problems.Evaluator;
+import problems.qbfpt.qbf.QBFPT;
 import solutions.Solution;
 
 /**
@@ -478,6 +479,17 @@ public abstract class AbstractGA<G extends Number, F> {
 		}
 
 		return offsprings;
+	}
+
+	private void extraMutations(Chromosome c) {
+		while (fitness(c) <= -5000)
+		{
+			for (int locus = 0; locus < chromosomeSize; locus++) {
+				if (rng.nextDouble() < mutationRate) {
+					mutateGene(c, locus);
+				}
+			}
+		}
 	}
 
 	/**

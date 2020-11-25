@@ -102,9 +102,9 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 	protected Double fitness(Chromosome chromosome) {
 
 		Solution<Integer> sol = decode(chromosome);
-		//if is a infeasible solution, then returns 0
+		//if is a infeasible solution, then returns -5000
 		if(!((QBFPT)ObjFunction).isFeasible(sol))
-		    return 0.0;
+		    return -5000.0;
 
         return sol.cost;
 
@@ -131,7 +131,6 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 	 * 
 	 */
 	public static void main(String[] args) throws IOException, URISyntaxException {
-		
 		List<String> instances = new ArrayList<String>();
 		instances.add("qbf020");
 		instances.add("qbf040");
@@ -144,6 +143,7 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 		
 		for(int i=0; i<instances.size(); i++) {
 			try {
+				System.out.println("Instance " + instanceSize[i]);
 				Integer pop1 = 100;
 				Integer pop2 = 1000;
 				Double mut1 = 1.0 / instanceSize[i];
@@ -154,17 +154,22 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 				GA_QBFPT gaMut = new GA_QBFPT(100000, pop1, mut2, "instances/"+instances.get(i));
 				GA_QBFPT gaEvol1 = new GA_QBFPT(100000, pop1, mut1, "instances/"+instances.get(i));
 				GA_QBFPT gaEvol2 = new GA_QBFPT(100000, pop1, mut1, "instances/"+instances.get(i));
-				
+
+				System.out.println("Instanciou");
 				
 				FileWriter fileWriter = new FileWriter("results/"+instances.get(i)+".txt");
 				fileWriter.append(" ======== Execução " + instances.get(i) + " ======= \n\n");
+
+				System.out.println("Mexeu no arquivo");
 				
 				GA_QBFPT.executeInstance("GA Padrão",gaPadrao, fileWriter, false, false, false);
 				GA_QBFPT.executeInstance("GA Pop",gaPop, fileWriter, false, false, false);
 				GA_QBFPT.executeInstance("GA Mut",gaMut, fileWriter, false, false, false);
 				GA_QBFPT.executeInstance("GA Evol1",gaEvol1, fileWriter, false, true, false);
 				GA_QBFPT.executeInstance("GA Evol2",gaEvol2, fileWriter, false, false, true);
-				
+
+				System.out.println("Executou as variantes");
+
 				fileWriter.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -179,7 +184,8 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 		long endTime = System.currentTimeMillis();
 		long totalTime = endTime - startTime;
 		double time = (double)totalTime/(double)1000;
-		
+
+		System.out.println("title = " + title);
 		System.out.println("maxVal = " + bestSol);
 		System.out.println("Time = "+ time +" seg");
 		
