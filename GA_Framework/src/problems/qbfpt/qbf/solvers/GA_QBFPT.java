@@ -110,6 +110,25 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 
 	}
 
+	@Override
+	protected Integer findForbiddenValue(Chromosome chromosome)
+	{
+		Solution<Integer> sol = decode(chromosome);
+		return ((QBFPT)ObjFunction).findForbiddenValue(sol);
+	}
+
+	@Override
+	protected void removeUntilFeasible(Chromosome c)
+	{
+		Integer x;
+		while ((x = findForbiddenValue(c)) != null)
+		// x está na solução mas forma tripla proibida com alguém
+		{
+			c.set(x, 0);
+			// remover x da solução!
+		}
+	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -124,6 +143,8 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 		chromosome.set(locus, 1 - chromosome.get(locus));
 
 	}
+
+
 
 	/**
 	 * A main method used for testing the GA metaheuristic.
@@ -162,11 +183,11 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 
 				System.out.println("Mexeu no arquivo");
 				
-				GA_QBFPT.executeInstance("GA Padrão",gaPadrao, fileWriter, false, false, false, true);
-				GA_QBFPT.executeInstance("GA Pop",gaPop, fileWriter, false, false, false, false);
-				GA_QBFPT.executeInstance("GA Mut",gaMut, fileWriter, false, false, false, false);
-				GA_QBFPT.executeInstance("GA Evol1",gaEvol1, fileWriter, false, true, false, false);
-				GA_QBFPT.executeInstance("GA Evol2",gaEvol2, fileWriter, false, false, true, false);
+				GA_QBFPT.executeInstance("GA Padrão",gaPadrao, fileWriter, false, false, false, false, false);
+				GA_QBFPT.executeInstance("GA Pop",gaPop, fileWriter, false, false, false, false, false);
+				GA_QBFPT.executeInstance("GA Mut",gaMut, fileWriter, false, false, false, false, false);
+				GA_QBFPT.executeInstance("GA Evol1",gaEvol1, fileWriter, false, true, false, false, false);
+				GA_QBFPT.executeInstance("GA Evol2",gaEvol2, fileWriter, false, false, true, false, false);
 
 				System.out.println("Executou as variantes");
 
@@ -178,9 +199,9 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 
 	}
 	
-	public static void executeInstance(String title, GA_QBFPT ga, FileWriter fileWriter, boolean isSUS, boolean isUniformCrossover, boolean isSteadyState, boolean forceMutations) {
+	public static void executeInstance(String title, GA_QBFPT ga, FileWriter fileWriter, boolean isSUS, boolean isUniformCrossover, boolean isSteadyState, boolean forceMutations, boolean remove) {
 		long startTime = System.currentTimeMillis();
-		Solution<Integer> bestSol = ga.solve(isSUS, isUniformCrossover, isSteadyState, forceMutations);
+		Solution<Integer> bestSol = ga.solve(isSUS, isUniformCrossover, isSteadyState, forceMutations, remove);
 		long endTime = System.currentTimeMillis();
 		long totalTime = endTime - startTime;
 		double time = (double)totalTime/(double)1000;

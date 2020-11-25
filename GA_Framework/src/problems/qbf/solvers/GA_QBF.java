@@ -97,6 +97,15 @@ public class GA_QBF extends AbstractGA<Integer, Integer> {
 
 	}
 
+	@Override
+	protected Integer findForbiddenValue(Chromosome chromosome) {
+		return null;
+	}
+
+	@Override
+	protected void removeUntilFeasible(Chromosome c) {
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -119,7 +128,7 @@ public class GA_QBF extends AbstractGA<Integer, Integer> {
 
 		long startTime = System.currentTimeMillis();
 		GA_QBF ga = new GA_QBF(1000, 100, 1.0 / 100.0, "instances/qbf020");
-		Solution<Integer> bestSol = ga.solve(false, false, false, false);
+		Solution<Integer> bestSol = ga.solve(false, false, false, false, false);
 		System.out.println("maxVal = " + bestSol);
 		long endTime = System.currentTimeMillis();
 		long totalTime = endTime - startTime;

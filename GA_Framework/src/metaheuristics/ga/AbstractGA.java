@@ -35,6 +35,7 @@ public abstract class AbstractGA<G extends Number, F> {
 
 	private boolean performExtraMutations = false;
 	private int extraMutationsCounter = 0;
+	private boolean removeToMakeFeasible = false;
 
 	/**
 	 * a random number generator
@@ -119,6 +120,10 @@ public abstract class AbstractGA<G extends Number, F> {
 	 */
 	protected abstract Double fitness(Chromosome chromosome);
 
+	protected abstract Integer findForbiddenValue(Chromosome chromosome);
+
+	protected abstract void removeUntilFeasible(Chromosome c);
+
 	/**
 	 * Mutates a given locus of the chromosome. This method should be preferably
 	 * called with an expected frequency determined by the {@link #mutationRate}.
@@ -162,8 +167,9 @@ public abstract class AbstractGA<G extends Number, F> {
 	 * 
 	 * @return The best feasible solution obtained throughout all iterations.
 	 */
-	public Solution<F> solve(boolean isSUS, boolean isUniformCrossover, boolean isSteadyState, boolean forceMutations) {
+	public Solution<F> solve(boolean isSUS, boolean isUniformCrossover, boolean isSteadyState, boolean forceMutations, boolean remove) {
 		this.performExtraMutations = forceMutations;
+		this.removeToMakeFeasible = remove;
 		this.extraMutationsCounter = 0;
 
 		long startTime = System.currentTimeMillis();
@@ -418,6 +424,11 @@ public abstract class AbstractGA<G extends Number, F> {
 				extraMutations(offspring2);
 			}
 
+			if (removeToMakeFeasible) {
+				removeUntilFeasible(offspring1);
+				removeUntilFeasible(offspring2);
+			}
+
 			offsprings.add(offspring1);
 			offsprings.add(offspring2);
 
@@ -471,6 +482,11 @@ public abstract class AbstractGA<G extends Number, F> {
 				extraMutations(offspring2);
 			}
 
+			if (removeToMakeFeasible) {
+				removeUntilFeasible(offspring1);
+				removeUntilFeasible(offspring2);
+			}
+
 			offsprings.add(offspring1);
 			offsprings.add(offspring2);
 
@@ -497,6 +513,10 @@ public abstract class AbstractGA<G extends Number, F> {
 
 					if (performExtraMutations) {
 						extraMutations(c);
+					}
+
+					if (removeToMakeFeasible) {
+						removeUntilFeasible(c);
 					}
 				}
 			}

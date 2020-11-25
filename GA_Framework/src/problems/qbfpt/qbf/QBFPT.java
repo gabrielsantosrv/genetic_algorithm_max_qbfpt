@@ -146,6 +146,28 @@ public class QBFPT implements Evaluator<Integer> {
         return true;
     }
 
+	public Integer findForbiddenValue(Solution<Integer> sol)
+	{
+		for (Integer x : sol) {
+			double sum;
+			for (int[] triple : this.triples) {
+				// check if the value x is in a triple
+				if (x == triple[0] || x == triple[1] || x == triple[2]) {
+					sum = 0;
+					for (int k : triple) {
+						if(sol.contains(new Integer(k)))
+							sum += 1;
+					}
+
+					//if all the elements of that triple in which x is included
+					//are also in the current solution, then it is infeasible
+					if (sum == 3.0)
+						return x;
+				}
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Evaluates the value of a solution by transforming it into a vector. This
