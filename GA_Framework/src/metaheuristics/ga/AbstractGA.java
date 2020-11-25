@@ -33,6 +33,9 @@ public abstract class AbstractGA<G extends Number, F> {
 	 */
 	public static boolean verbose = true;
 
+	private boolean performExtraMutations = false;
+	private int extraMutationsCounter = 0;
+
 	/**
 	 * a random number generator
 	 */
@@ -147,6 +150,10 @@ public abstract class AbstractGA<G extends Number, F> {
 		this.mutationRate = mutationRate;
 	}
 
+	public int getExtraMutationsCounter() {
+		return extraMutationsCounter;
+	}
+
 	/**
 	 * The GA mainframe. It starts by initializing a population of chromosomes.
 	 * It then enters a generational loop, in which each generation goes the
@@ -155,7 +162,10 @@ public abstract class AbstractGA<G extends Number, F> {
 	 * 
 	 * @return The best feasible solution obtained throughout all iterations.
 	 */
-	public Solution<F> solve(boolean isSUS, boolean isUniformCrossover, boolean isSteadyState) {
+	public Solution<F> solve(boolean isSUS, boolean isUniformCrossover, boolean isSteadyState, boolean forceMutations) {
+		this.performExtraMutations = forceMutations;
+		this.extraMutationsCounter = 0;
+
 		long startTime = System.currentTimeMillis();
 		long endTime;
 		double totalTime;
@@ -403,6 +413,11 @@ public abstract class AbstractGA<G extends Number, F> {
 				}
 			}
 
+			if (performExtraMutations) {
+				extraMutations(offspring1);
+				extraMutations(offspring2);
+			}
+
 			offsprings.add(offspring1);
 			offsprings.add(offspring2);
 
@@ -451,6 +466,11 @@ public abstract class AbstractGA<G extends Number, F> {
 				}
 			}
 
+			if (performExtraMutations) {
+				extraMutations(offspring1);
+				extraMutations(offspring2);
+			}
+
 			offsprings.add(offspring1);
 			offsprings.add(offspring2);
 
@@ -474,6 +494,10 @@ public abstract class AbstractGA<G extends Number, F> {
 			for (int locus = 0; locus < chromosomeSize; locus++) {
 				if (rng.nextDouble() < mutationRate) {
 					mutateGene(c, locus);
+
+					if (performExtraMutations) {
+						extraMutations(c);
+					}
 				}
 			}
 		}
@@ -487,6 +511,7 @@ public abstract class AbstractGA<G extends Number, F> {
 			for (int locus = 0; locus < chromosomeSize; locus++) {
 				if (rng.nextDouble() < mutationRate) {
 					mutateGene(c, locus);
+					extraMutationsCounter++;
 				}
 			}
 		}

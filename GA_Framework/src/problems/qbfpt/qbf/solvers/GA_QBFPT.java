@@ -162,11 +162,11 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 
 				System.out.println("Mexeu no arquivo");
 				
-				GA_QBFPT.executeInstance("GA Padrão",gaPadrao, fileWriter, false, false, false);
-				GA_QBFPT.executeInstance("GA Pop",gaPop, fileWriter, false, false, false);
-				GA_QBFPT.executeInstance("GA Mut",gaMut, fileWriter, false, false, false);
-				GA_QBFPT.executeInstance("GA Evol1",gaEvol1, fileWriter, false, true, false);
-				GA_QBFPT.executeInstance("GA Evol2",gaEvol2, fileWriter, false, false, true);
+				GA_QBFPT.executeInstance("GA Padrão",gaPadrao, fileWriter, false, false, false, true);
+				GA_QBFPT.executeInstance("GA Pop",gaPop, fileWriter, false, false, false, false);
+				GA_QBFPT.executeInstance("GA Mut",gaMut, fileWriter, false, false, false, false);
+				GA_QBFPT.executeInstance("GA Evol1",gaEvol1, fileWriter, false, true, false, false);
+				GA_QBFPT.executeInstance("GA Evol2",gaEvol2, fileWriter, false, false, true, false);
 
 				System.out.println("Executou as variantes");
 
@@ -178,9 +178,9 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 
 	}
 	
-	public static void executeInstance(String title, GA_QBFPT ga, FileWriter fileWriter, boolean isSUS, boolean isUniformCrossover, boolean isSteadyState) {
+	public static void executeInstance(String title, GA_QBFPT ga, FileWriter fileWriter, boolean isSUS, boolean isUniformCrossover, boolean isSteadyState, boolean forceMutations) {
 		long startTime = System.currentTimeMillis();
-		Solution<Integer> bestSol = ga.solve(isSUS, isUniformCrossover, isSteadyState);
+		Solution<Integer> bestSol = ga.solve(isSUS, isUniformCrossover, isSteadyState, forceMutations);
 		long endTime = System.currentTimeMillis();
 		long totalTime = endTime - startTime;
 		double time = (double)totalTime/(double)1000;
@@ -188,12 +188,14 @@ public class GA_QBFPT extends AbstractGA<Integer, Integer> {
 		System.out.println("title = " + title);
 		System.out.println("maxVal = " + bestSol);
 		System.out.println("Time = "+ time +" seg");
+		System.out.println("Extra muts = " + ga.getExtraMutationsCounter());
 		
 		if(fileWriter != null) {
 			try {
 				fileWriter.append(title+"\n");
 				fileWriter.append("Best solution: "+ bestSol + "\n");
-				fileWriter.append("Time: "+ time + "seg \n\n");
+				fileWriter.append("Time: "+ time + "seg \n");
+				fileWriter.append("Extra mutations: " + ga.getExtraMutationsCounter() + "\n\n");
 			} catch (IOException e) {
 				e.printStackTrace();
 				System.out.println("Error writing in file: "+title);
